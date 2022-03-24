@@ -1,139 +1,64 @@
 <script setup>
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
+import { ref } from "vue";
 import HelloWorld from './components/HelloWorld.vue'
+import FilmCard from './components/FilmCard.vue'
+import FilmInfo from './components/FilmInfo.vue'
+
+const filmData = ref(null);
+
+const activeFilm = ref(0);
+
+
+fetch("https://ghibliapi.herokuapp.com/films")
+    .then((response) => response.json())
+    .then(data => filmData.value = data)
+
+const filmCardClick = (i) => {
+    activeFilm.value = i;
+}
 </script>
 
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="just monika." />
-  <button>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span> Monika.
-    </button>
+        <nav class="films-list">
+            <FilmCard v-for="(film, i) in filmData"
+            :key="'film'+i"
+            :filmTitle="film.title"
+            :imageSrc="film.movie_banner"
+            :filmDirector="film.director"
+            @click="filmCardClick(i)"/>
+        </nav>
+<film-info
+    :filmTitle="filmData[activeFilm].title"
+    :filmTitleOriginal="filmData[activeFilm].original_title"
+    :filmYear="filmData[activeFilm].release_date"
+    :filmDirector="filmData[activeFilm].director"
+    :filmImage="filmData[activeFilm].image"
+    :filmDescription="filmData[activeFilm].description"
+    />
 </template>
-
 
 <style>
 
-@import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Montserrat:wght@100&family=Red+Hat+Display:wght@300&display=swap');
-
 body {
-  background-color: #3b3b3b;
-}
-
-#app {
-  font-family: 'Cutive Mono', monospace;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #acacac;
-  margin-top: 60px;
-}
-
-/* From cssbuttons.io by @menezes11 */
-button {
- position: relative;
- padding: 1em 1.8em;
- outline: none;
- border: 1px solid #303030;
- background: #333333;
- color: #ae00ff;
- text-transform: uppercase;
- letter-spacing: 2px;
- font-size: 15px;
- overflow: hidden;
- transition: 0.2s;
- border-radius: 20px;
- cursor: pointer;
- font-weight: bold;
-}
-
-button:hover {
- box-shadow: 0 0 10px #ae00ff, 0 0 25px #001eff, 0 0 50px #ae00ff;
- transition-delay: 0.6s;
-}
-
-button span {
- position: absolute;
-}
-
-button span:nth-child(1) {
- top: 0;
- left: -100%;
- width: 100%;
- height: 2px;
- background: linear-gradient(90deg, transparent, #ae00ff);
-}
-
-button:hover span:nth-child(1) {
- left: 100%;
- transition: 0.7s;
-}
-
-button span:nth-child(3) {
- bottom: 0;
- right: -100%;
- width: 100%;
- height: 2px;
- background: linear-gradient(90deg, transparent, #001eff);
-}
-
-button:hover span:nth-child(3) {
- right: 100%;
- transition: 0.7s;
- transition-delay: 0.35s;
-}
-
-button span:nth-child(2) {
- top: -100%;
- right: 0;
- width: 2px;
- height: 100%;
- background: linear-gradient(180deg, transparent, #ae00ff);
-}
-
-button:hover span:nth-child(2) {
- top: 100%;
- transition: 0.7s;
- transition-delay: 0.17s;
-}
-
-button span:nth-child(4) {
- bottom: -100%;
- left: 0;
- width: 2px;
- height: 100%;
- background: linear-gradient(360deg, transparent, #001eff);
-}
-
-button:hover span:nth-child(4) {
- bottom: 100%;
- transition: 0.7s;
- transition-delay: 0.52s;
-}
-
-button:active {
- background: #ae00af;
- background: linear-gradient(to top right, #ae00af, #001eff);
- color: #bfbfbf;
- box-shadow: 0 0 8px #ae00ff, 0 0 8px #001eff, 0 0 8px #ae00ff;
- transition: 0.1s;
-}
-
-button:active span:nth-child(1) 
-span:nth-child(2) 
-span:nth-child(2) 
-span:nth-child(2) {
- transition: none;
- transition-delay: none;
+    margin: 0;
+    background: black;
+    color: white;
 }
 
 img {
-  height: 1%;
-  width: 10%;
-  margin-top: -5%;
+    width: 100%;
+    height: 300px;
+}
+
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
 }
 </style>
